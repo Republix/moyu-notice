@@ -9,6 +9,8 @@ const app = new Koa();
 const router = new Router();
 const PORT = process.env.PORT || 3151;
 
+app.proxy = true;
+
 Utils.loadConfig();
 
 const accessLogMidware = async (ctx, next) => {
