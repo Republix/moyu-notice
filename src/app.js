@@ -1,22 +1,45 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const { setupScheduler } = require('./services/scheduler');
+const { generateMessage } = require('./services/message')
 const Utils = require('./utils')
+const { appLogger, logAccess } = require('./plugins/log')
 
 const app = new Koa();
 const router = new Router();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3151;
 
-Utils.loadConfig()
+Utils.loadConfig();
 
-// 健康检查路由
-router.get('/status', async (ctx) => {
-  ctx.body = {
-    status: 'running',
-    message: 'm-y is running',
-    time: new Date().toISOString()
-  };
-});
+const accessLogMidware = async (ctx, next) => {
+  await next();
+
+  const { ip, path, headers } = ctx;
+  const ua = headers['user-agent'];
+  logAccess({ ip, path, ua });
+};
+
+router
+  .get('/status', ctx => {
+    const date = new Date()
+    const time = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+
+    ctx.body = {
+      status: 'ok',
+      message: 'm-y is running',
+      ip: ctx.ip,
+      time
+    };
+  })
+  .get('/msg', accessLogMidware, ctx => {
+    ctx.body = generateMessage()
+  })
+  .get('/msg2', accessLogMidware, ctx => {
+    ctx.body = {
+      succ: true,
+      data: generateMessage()
+    }
+  })
 
 app.use(router.routes()).use(router.allowedMethods());
 
@@ -24,5 +47,5 @@ app.use(router.routes()).use(router.allowedMethods());
 setupScheduler();
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  appLogger.info(`Server running on http://localhost:${PORT}`);
 });

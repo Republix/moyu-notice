@@ -7,8 +7,8 @@ const nowYear = new Date().getFullYear();
 const holidays = holidaysConfig[`holidays${nowYear}`];
 
 // 获取工作日信息
-function getWorkdayInfo() {
-  const today = dayjs();
+function getWorkdayInfo(_date) {
+  const today = dayjs(_date);
   const year = today.year();
   const month = today.month() + 1;
   const date = today.date();
@@ -32,8 +32,8 @@ function getWorkdayInfo() {
 }
 
 // 计算距离下一个发薪日的天数
-function getDaysUntilSalary() {
-  const today = dayjs();
+function getDaysUntilSalary(date) {
+  const today = dayjs(date);
   const currentDate = today.date();
   
   let nextSalaryDay;
@@ -49,8 +49,8 @@ function getDaysUntilSalary() {
 }
 
 // 计算距离下一个周末的天数和调休信息
-function getDaysUntilWeekend() {
-  const today = dayjs();
+function getDaysUntilWeekend(date) {
+  const today = dayjs(date);
   
   // 获取本周末的休息信息
   const weekendInfo = getWeekendAdjustInfo(today.format('YYYY-MM-DD'));
@@ -68,8 +68,8 @@ function getDaysUntilWeekend() {
 }
 
 // 计算距离节假日的天数
-function getDaysUntilHolidays() {
-  const today = dayjs();
+function getDaysUntilHolidays(date) {
+  const today = dayjs(date);
   const holidayCountdown = {};
   
   for (const [name, info] of Object.entries(holidays)) {
@@ -85,18 +85,39 @@ function getDaysUntilHolidays() {
   return holidayCountdown;
 }
 
+function getDayWelcome(date) {
+  const today = dayjs(date);
+  const hour = today.hour();
+  const minute = today.minute();
+
+  if (hour < 10 && minute < 21) {
+    return '早上好';
+  } else if (hour < 12) {
+    return '上午好';
+  } else if (hour < 13) {
+    return '中午好';
+  } else if (hour < 18) {
+    return '下午好';
+  } else {
+    return '晚上好';
+  }
+}
+
 // 生成完整的摸鱼人日报信息
-function generateMessage() {
-  const { year, month, date, weekday, yearProgress } = getWorkdayInfo();
-  const daysUntilSalary = getDaysUntilSalary();
-  const holidayCountdown = getDaysUntilHolidays();
+function generateMessage(targetDate) {
+  const useDate = targetDate || new Date()
+
+  const { year, month, date, weekday, yearProgress } = getWorkdayInfo(useDate);
+  const daysUntilSalary = getDaysUntilSalary(useDate);
+  const holidayCountdown = getDaysUntilHolidays(useDate);
+  const weekendInfo = getDaysUntilWeekend(useDate);
+  const dayWelcome = getDayWelcome(useDate)
   
   let message = `今天是 ${year}年${month}月${date}日，星期${weekday}。`;
-  message += '早上好，打工人！';
+  message += `${dayWelcome}，打工人！`;
   message += `今年已经过去了${yearProgress}%，也一定不要忘记摸鱼哦！`;
   message += '有事没事起身去茶水间，去厕所，去廊道走走，别总在工位上坐着，但健康是自己的。\n\n';
   
-  const weekendInfo = getDaysUntilWeekend();
   
   message += '温馨提示:\n';
   message += `距离【12号发工资】：${daysUntilSalary}天\n`;

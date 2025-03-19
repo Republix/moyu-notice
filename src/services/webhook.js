@@ -1,11 +1,7 @@
 const axios = require('axios');
 const { generateMessage } = require('./message');
 const Utils = require('../utils')
-
-// 写入日志
-function writeLog(message) {
-  console.log(message)
-}
+const { writeLog } = require('../plugins/log')
 
 
 /**
@@ -26,7 +22,7 @@ async function sendMessage(customMessage = null) {
   const results = [];
   
   // 获取最新配置
-  const config = Utils.getConfig()
+  const config = Utils.loadConfig()
   writeLog('已读取最新配置文件');
   
   // 遍历所有启用的webhook
