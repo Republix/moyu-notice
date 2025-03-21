@@ -1,8 +1,9 @@
 const dayjs = require('dayjs');
 const holidaysConfig = require('../config/holidays');
 const { getWeekendAdjustInfo } = require('./day');
+const { getLunarDate } = require('../plugins/lunar');
 
-const { salary } = holidaysConfig;
+const { salary, salaryDays } = holidaysConfig;
 const nowYear = new Date().getFullYear();
 const holidays = holidaysConfig[`holidays${nowYear}`];
 
@@ -35,17 +36,23 @@ function getWorkdayInfo(_date) {
 function getDaysUntilSalary(date) {
   const today = dayjs(date);
   const currentDate = today.date();
-  
-  let nextSalaryDay;
-  if (currentDate >= salary.day) {
-    // 如果当前日期已过发薪日，计算下个月的发薪日
-    nextSalaryDay = today.add(1, 'month').set('date', salary.day);
-  } else {
-    // 如果当前日期未到发薪日，计算本月的发薪日
-    nextSalaryDay = today.set('date', salary.day);
-  }
-  
-  return nextSalaryDay.diff(today, 'day');
+
+  const result = [];
+  salaryDays.forEach(day => {
+    let nextSalaryDay;
+    if (currentDate >= day) {
+      // 如果当前日期已过发薪日，计算下个月的发薪日
+      nextSalaryDay = today.add(1, 'month').set('date', day);
+    } else {
+      // 如果当前日期未到发薪日，计算本月的发薪日
+      nextSalaryDay = today.set('date', day);
+    }
+    
+    const diff = nextSalaryDay.diff(today, 'day');
+    result.push({ label: day, value: diff });
+  })
+
+  return result;
 }
 
 // 计算距离下一个周末的天数和调休信息
@@ -104,43 +111,49 @@ function getDayWelcome(date) {
 }
 
 // 生成完整的摸鱼人日报信息
-function generateMessage(targetDate) {
+function generateMessage (targetDate) {
   const useDate = targetDate || new Date()
 
   const { year, month, date, weekday, yearProgress } = getWorkdayInfo(useDate);
   const daysUntilSalary = getDaysUntilSalary(useDate);
   const holidayCountdown = getDaysUntilHolidays(useDate);
   const weekendInfo = getDaysUntilWeekend(useDate);
-  const dayWelcome = getDayWelcome(useDate)
-  
-  let message = `今天是 ${year}年${month}月${date}日，星期${weekday}。`;
-  message += `${dayWelcome}，打工人！`;
-  message += `今年已经过去了${yearProgress}%，也一定不要忘记摸鱼哦！`;
-  message += '有事没事起身去茶水间，去厕所，去廊道走走，别总在工位上坐着，但健康是自己的。\n\n';
-  
-  
-  message += '温馨提示:\n';
-  message += `距离【12号发工资】：${daysUntilSalary}天\n`;
-  message += `距离【双休周末】还有：${weekendInfo.daysUntil}天\n`;
-  
+  const dayWelcome = getDayWelcome(useDate);
+  const lunarDate = getLunarDate(useDate);
+
+  const messages = [];
+  messages.push(`${dayWelcome}，打工人！`);
+  messages.push(`今天是 ${year}年${month}月${date}日，星期${weekday}，农历${lunarDate}。`);
+  messages.push(`今年已经过去了${yearProgress}%，工作再忙，也一定不要忘记摸鱼哦！`);
+  messages.push('有事没事起身去茶水间，去厕所，去廊道走走，别总在工位上坐着，健康是自己的。');
+  messages.push(``);
+
+  messages.push('温馨提示:');
+  daysUntilSalary.forEach(ds => {
+    messages.push(`距离【${ds.label}号发工资】：${ds.value}天`);
+  });
+
+  messages.push(`距离【双休周末】还有：${weekendInfo.daysUntil}天`);
+  messages.push(``);
+
   // 添加调休提醒
   const adjustDays = weekendInfo.adjustInfo.filter(info => info.isAdjust);
   if (adjustDays.length > 0) {
-    message += '本周末调休安排：\n';
+    messages.push('本周末调休安排：');
     adjustDays.forEach(info => {
       const date = dayjs(info.date).format('M月D日');
-      message += `${date}需要调休上班\n`;
+      messages.push(`${date}需要调休上班`);
     });
   }
-  
-  message += '\n';
-  
-  message += '节日倒计时:\n';
+
+  messages.push('节日倒计时:');
+
   for (const [holiday, days] of Object.entries(holidayCountdown)) {
-    message += `距离【${holiday}】还有：${days}天\n`;
+    messages.push(`距离【${holiday}】还有：${days}天`);
   }
+  messages.push('');
   
-  return message;
+  return messages.join('\n');
 }
 
 module.exports = {
