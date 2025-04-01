@@ -34,7 +34,7 @@ function getWorkdayInfo(_date) {
 
 // 计算距离下一个发薪日的天数
 function getDaysUntilSalary(date) {
-  const today = dayjs(date);
+  const today = dayjs(date).startOf('day');
   const currentDate = today.date();
 
   const result = [];
@@ -57,7 +57,7 @@ function getDaysUntilSalary(date) {
 
 // 计算距离下一个周末的天数和调休信息
 function getDaysUntilWeekend(date) {
-  const today = dayjs(date);
+  const today = dayjs(date).startOf('day');
   
   // 获取本周末的休息信息
   const weekendInfo = getWeekendAdjustInfo(today.format('YYYY-MM-DD'));
@@ -76,11 +76,12 @@ function getDaysUntilWeekend(date) {
 
 // 计算距离节假日的天数
 function getDaysUntilHolidays(date) {
-  const today = dayjs(date);
+  const today = dayjs(date).startOf('day');
   const holidayCountdown = {};
   
+  let index = 0
   for (const [name, info] of Object.entries(holidays)) {
-    const holidayDate = dayjs(info.date);
+    const holidayDate = dayjs(info.date).startOf('day');
     const daysUntil = holidayDate.diff(today, 'day');
     
     // 只显示未来的节日
