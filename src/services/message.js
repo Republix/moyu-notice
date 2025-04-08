@@ -3,7 +3,7 @@ const holidaysConfig = require('../config/holidays');
 const { getWeekendAdjustInfo } = require('./day');
 const { getLunarDate } = require('../plugins/lunar');
 
-const { salary, salaryDays } = holidaysConfig;
+const { salaryDays, commonSalaryDays } = holidaysConfig;
 const nowYear = new Date().getFullYear();
 const holidays = holidaysConfig[`holidays${nowYear}`];
 
@@ -33,12 +33,13 @@ function getWorkdayInfo(_date) {
 }
 
 // 计算距离下一个发薪日的天数
-function getDaysUntilSalary(date) {
+function getDaysUntilSalary(date, useCommonSalarayDays) {
   const today = dayjs(date).startOf('day');
   const currentDate = today.date();
 
   const result = [];
-  salaryDays.forEach(day => {
+  const useSalaryDays = useCommonSalarayDays ? commonSalaryDays : salaryDays
+  useSalaryDays.forEach(day => {
     let nextSalaryDay;
     if (currentDate >= day) {
       // 如果当前日期已过发薪日，计算下个月的发薪日
@@ -112,11 +113,12 @@ function getDayWelcome(date) {
 }
 
 // 生成完整的摸鱼人日报信息
-function generateMessage (targetDate) {
+function generateMessage (targetDate, options) {
   const useDate = targetDate || new Date()
+  const { useCommonSalarayDays } = options || {}
 
   const { year, month, date, weekday, yearProgress } = getWorkdayInfo(useDate);
-  const daysUntilSalary = getDaysUntilSalary(useDate);
+  const daysUntilSalary = getDaysUntilSalary(useDate, useCommonSalarayDays);
   const holidayCountdown = getDaysUntilHolidays(useDate);
   const weekendInfo = getDaysUntilWeekend(useDate);
   const dayWelcome = getDayWelcome(useDate);

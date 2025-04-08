@@ -2,6 +2,7 @@
 const holidayConfig = {
   // 发薪日配置
   salaryDays: [12],
+  commonSalaryDays: [10, 12, 15],
   // 节假日配置（日期为放假第一天）
   holidays2025: {
     清明: {

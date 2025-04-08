@@ -34,12 +34,12 @@ router
     };
   })
   .get('/msg', accessLogMidware, ctx => {
-    ctx.body = generateMessage()
+    ctx.body = generateMessage(new Date(), ctx.query)
   })
   .get('/msg2', accessLogMidware, ctx => {
     ctx.body = {
       succ: true,
-      data: generateMessage()
+      data: generateMessage(new Date(), ctx.query)
     }
   })
 
