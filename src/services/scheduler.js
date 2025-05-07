@@ -11,7 +11,7 @@ function setupScheduler() {
   
   // 设置每天上午9:05执行的定时任务
   // 秒 分 时 日 月 周
-  const dailyJob = schedule.scheduleJob('0 55 9 * * *', doSendTask);
+  const dailyJob = schedule.scheduleJob('0 10 9 * * *', doSendTask);
   
   // 返回任务对象，以便需要时可以取消
   return {
