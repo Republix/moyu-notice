@@ -1,5 +1,5 @@
 // 节假日配置文件
-const holidayConfig = {
+export default {
   // 发薪日配置
   salaryDays: [12],
   commonSalaryDays: [10, 12, 15],
@@ -37,6 +37,4 @@ const holidayConfig = {
   // 调休周末日期
   adjustRestDays: ['2025-04-27', '2025-09-28', '2025-10-11']  // 劳动节调休4月27日，国庆节调休9月28日、10月11日:cite[1]:cite[3]:cite[4]
 
-};
-
-module.exports = holidayConfig
+}

@@ -1,4 +1,4 @@
-const log4js = require('log4js');
+import log4js from 'log4js'
 
 // 配置log4js
 log4js.configure({
@@ -29,20 +29,25 @@ log4js.configure({
       level: 'info'
     },
   }
-});
+})
 
 // module.exports = log4js.getLogger('scheduler');
-const logger = log4js.getLogger('scheduler');
+const logger = log4js.getLogger('scheduler')
+const appLogger = log4js.getLogger('app')
+const accessLogger = log4js.getLogger('access')
 
-const appLogger = log4js.getLogger('app');
-const accessLogger = log4js.getLogger('access');
+const writeLog = (message) => {
+  logger.info(message)
+}
 
-exports.appLogger = appLogger;
+const logAccess = ({ ip, ua, path }) => {
+  accessLogger.info(`ip: ${ip} - path: ${path} - ua: ${ua} - `)
+}
 
-exports.writeLog = (message) => {
-  logger.info(message);
-};
+export {
+  appLogger,
+  writeLog,
+  logAccess
+}
 
-exports.logAccess = ({ ip, ua, path }) => {
-  accessLogger.info(`ip: ${ip} - path: ${path} - ua: ${ua} - `);
-};
+

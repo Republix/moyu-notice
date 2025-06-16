@@ -1,35 +1,35 @@
-const holidayConfig = require('../config/holidays');
+import holidayConfig from '@/config/holidays'
 
-const { holidays2025, adjustRestDays } = holidayConfig;
+const { holidays2025, adjustRestDays } = holidayConfig
 
 /**
  * 判断某一天是否是休息日（包括法定节假日和非调休的周六日）
  * @param {string} dateStr - 日期字符串，格式为 'YYYY-MM-DD'
  * @returns {boolean} - 是否是休息日
  */
-function isRestDay(dateStr) {
-  const date = new Date(dateStr);
-  const dayOfWeek = date.getDay(); // 获取星期几（0-6，0是周日）
+export function isRestDay(dateStr) {
+  const date = new Date(dateStr)
+  const dayOfWeek = date.getDay() // 获取星期几（0-6，0是周日）
 
   // 1. 判断是否是法定节假日
   for (const holiday of Object.values(holidays2025)) {
     if (holiday.gap.includes(dateStr)) {
-      return true;
+      return true
     }
   }
 
   // 2. 判断是否是调休日（调休日需要上班，不算休息日）
   if (adjustRestDays.includes(dateStr)) {
-    return false;
+    return false
   }
 
   // 3. 判断是否是周末（周六或周日）
   if (dayOfWeek === 0 || dayOfWeek === 6) {
-    return true;
+    return true
   }
 
   // 其他情况为工作日
-  return false;
+  return false
 }
 
 /**
@@ -37,7 +37,7 @@ function isRestDay(dateStr) {
  * @param {string} dateStr - 日期字符串，格式为 'YYYY-MM-DD'
  * @returns {object} - 返回调休信息和休息日信息
  */
-function getWeekendAdjustInfo(dateStr) {
+export function getWeekendAdjustInfo(dateStr) {
   const date = new Date(dateStr);
   const dayOfWeek = date.getDay(); // 获取星期几（0-6，0是周日）
 
@@ -67,8 +67,3 @@ function getWeekendAdjustInfo(dateStr) {
     restDays, // 实际休息的日期
   };
 }
-
-module.exports = {
-  getWeekendAdjustInfo,
-  isRestDay,
-};

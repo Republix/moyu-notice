@@ -1,0 +1,7 @@
+{
+  "exec": "node --import tsx ./src/app.ts",
+  "ignore": ["node_modules"],
+  "watch": ["src"],
+  "ext": "ts,js,json",
+  "legacyWatch": true
+}

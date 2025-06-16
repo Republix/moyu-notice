@@ -1,4 +1,5 @@
-const LunarCalendar = require('../../lib/lunar')
+// const LunarCalendar = require('../../lib/lunar')
+import LunarCalendar from '@lib/lunar'
 
 function getLunarObj (date) {
   return LunarCalendar.solar2lunar(
@@ -15,6 +16,10 @@ function getLunarDate (date) {
   return `${lunar.IMonthCn}${lunar.IDayCn}`
 }
 
-module.exports = {
+// module.exports = {
+//   getLunarDate
+// }
+
+export {
   getLunarDate
 }
