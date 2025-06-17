@@ -4,8 +4,8 @@
   "description": "moyu notice",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
-    "start": "pm2 start ./src/app.ts --node-args=\"--loader tsx\" --name moyu-notice",
+    "dev": "nodemon",
+    "start": "pm2 start ./src/app.ts --interpreter node --node-args=\"--import tsx\" --name moyu-notice",
     "send": "node run.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
