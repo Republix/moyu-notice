@@ -16,10 +16,6 @@ function getLunarDate (date) {
   return `${lunar.IMonthCn}${lunar.IDayCn}`
 }
 
-// module.exports = {
-//   getLunarDate
-// }
-
 export {
   getLunarDate
 }

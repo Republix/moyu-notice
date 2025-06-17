@@ -13,7 +13,7 @@ export async function sendMessage(customMessage = null) {
   const defaultMessage = {
     msg_type: 'text',
     content: {
-      text: generateMessage()
+      text: generateMessage(new Date())
     }
   }
 

@@ -1,4 +1,5 @@
 import holidayConfig from '@/config/holidays'
+import dayjs from 'dayjs'
 
 const { holidays2025, adjustRestDays } = holidayConfig
 
@@ -7,7 +8,7 @@ const { holidays2025, adjustRestDays } = holidayConfig
  * @param {string} dateStr - 日期字符串，格式为 'YYYY-MM-DD'
  * @returns {boolean} - 是否是休息日
  */
-export function isRestDay(dateStr) {
+export function isRestDay (dateStr) {
   const date = new Date(dateStr)
   const dayOfWeek = date.getDay() // 获取星期几（0-6，0是周日）
 
@@ -32,38 +33,45 @@ export function isRestDay(dateStr) {
   return false
 }
 
+
+interface WeekendAdjustINfo {
+  weekendDates: string[]; // 本周末的日期（周六和周日）
+  adjustInfo: { date: string; isAdjust: boolean }[]; // 调休信息
+  restDays: string[]; // 实际休息的日期
+}
+
 /**
  * 判断某一天所属的周末是否有调休，以及双休日中哪一天休息
- * @param {string} dateStr - 日期字符串，格式为 'YYYY-MM-DD'
- * @returns {object} - 返回调休信息和休息日信息
+ * @param {String} dateStr - 日期字符串，格式为 'YYYY-MM-DD'
+ * @returns {WeekendAdjustINfo} - 返回调休信息和休息日信息
  */
-export function getWeekendAdjustInfo(dateStr) {
-  const date = new Date(dateStr);
-  const dayOfWeek = date.getDay(); // 获取星期几（0-6，0是周日）
+export function getWeekendAdjustInfo (dateStr): WeekendAdjustINfo {
+  const date = new Date(dateStr)
+  const dayOfWeek = date.getDay() // 获取星期几（0-6，0是周日）
 
-  // 计算本周六和周日的日期
-  const saturday = new Date(date);
-  saturday.setDate(date.getDate() + (6 - dayOfWeek));
-  const sunday = new Date(saturday);
-  sunday.setDate(saturday.getDate() + 1);
+  // 计算本周六，本周日的日期
+  const saturday = new Date(date)
+  saturday.setDate(date.getDate() + (6 - dayOfWeek))
+  const sunday = new Date(saturday)
+  sunday.setDate(saturday.getDate() + 1)
 
   const weekendDates = [
-    saturday.toISOString().split('T')[0], // 周六
-    sunday.toISOString().split('T')[0], // 周日
-  ];
+    dayjs(saturday).format('YYYY-MM-DD'), // 周六
+    dayjs(sunday).format('YYYY-MM-DD'), // 周六
+  ]
 
   // 判断周末是否有调休
   const adjustInfo = weekendDates.map((date) => ({
     date,
     isAdjust: adjustRestDays.includes(date),
-  }));
+  }))
 
   // 判断双休日中哪一天休息
-  const restDays = weekendDates.filter((date) => isRestDay(date));
+  const restDays = weekendDates.filter((date) => isRestDay(date))
 
   return {
     weekendDates, // 本周末的日期（周六和周日）
     adjustInfo, // 调休信息
     restDays, // 实际休息的日期
-  };
+  }
 }
