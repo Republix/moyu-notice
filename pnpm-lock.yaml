@@ -23,6 +23,9 @@ importers:
       koa-router:
         specifier: ^12.0.0
         version: 12.0.1
+      koa2-origin-cors:
+        specifier: ^1.0.2
+        version: 1.0.2
       log4js:
         specifier: ^6.9.1
         version: 6.9.1
@@ -1109,6 +1112,9 @@ packages:
   koa-router@12.0.1:
     resolution: {integrity: sha512-gaDdj3GtzoLoeosacd50kBBTnnh3B9AYxDThQUo4sfUyXdOhY6ku1qyZKW88tQCRgc3Sw6ChXYXWZwwgjOxE0w==}
     engines: {node: '>= 12'}
+
+  koa2-origin-cors@1.0.2:
+    resolution: {integrity: sha512-WnN0bv3f3myO8kwDcZxJjEaML315qbkse2+kt1zp0mlSOQ8+SEDovtqc2P1PrFdHguSac7bWRX1cdtaZZwR5Yw==}
 
   koa@2.16.0:
     resolution: {integrity: sha512-Afhqq0Vq3W7C+/rW6IqHVBDLzqObwZ07JaUNUEF8yCQ6afiyFE3RAy+i7V0E46XOWlH7vPWn/x0vsZwNy6PWxw==}
@@ -2846,6 +2852,8 @@ snapshots:
       path-to-regexp: 6.3.0
     transitivePeerDependencies:
       - supports-color
+
+  koa2-origin-cors@1.0.2: {}
 
   koa@2.16.0:
     dependencies:

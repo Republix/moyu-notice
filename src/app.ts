@@ -1,6 +1,6 @@
 import Koa from 'koa'
+import cors from 'koa2-origin-cors'
 
-import { loadConfig } from '@/utils'
 import { appLogger } from '@/plugins/log'
 import router from '@/api'
 
@@ -9,8 +9,9 @@ const PORT = process.env.PORT || 4300;
 
 app.proxy = true;
 
-loadConfig()
-
+app.use(cors({
+  allowAll: true
+}))
 app.use(router.routes()).use(router.allowedMethods())
 
 
