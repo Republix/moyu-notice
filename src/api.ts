@@ -1,7 +1,5 @@
 import Router from 'koa-router'
 import { logAccess } from '@/plugins/log'
-import { generateMessage } from '@/services/message'
-import { genFullMessageOptions } from '@/interface/msg'
 
 const router = new Router()
 
@@ -13,25 +11,6 @@ const accessLogMidware = async (ctx, next) => {
   logAccess({ ip, path, ua })
 }
 
-interface GenMsgParams {
-  salaryDays?: string, // 指定工资日(逗号隔开)
-}
-
-const genMsgParamsConvert = (params: GenMsgParams) => {
-  const result = { ...params } as Record<string, any>
-
-  if (params.salaryDays) {
-    result.salaryDays = params.salaryDays.split(',')
-  }
-
-  return result as genFullMessageOptions
-}
-
-const queryToFullMsg = (query) => {
-  const params = genMsgParamsConvert(query)
-
-  return generateMessage(new Date(), params)
-}
 
 router
   .get('/status', ctx => {
@@ -45,13 +24,38 @@ router
       time
     }
   })
-  .get('/msg', accessLogMidware, ctx => {
-    ctx.body = queryToFullMsg(ctx.query)
-  })
-  .get('/msg2', accessLogMidware, ctx => {
+
+  // devs tools
+  router.use(accessLogMidware)
+  // devs
+  .get('/ds-list1', ctx => {
+
+      const data = [
+        { type1: '测试1', type2: '测试2', type3: 'testing3', type4: '44444' },
+        { type1: '测试12', type2: '测试22', type3: 'testing32', type4: '444442' },
+        { type1: '测试13', type2: '测试23', type3: 'testing33', type4: '444443' },
+        { type1: '测试14', type2: '测试24', type3: 'testing34', type4: '444444' },
+        { type1: '测试15', type2: '测试25', type3: 'testing34', type4: '444445' },
+      ]
+
     ctx.body = {
+      data: data,
       succ: true,
-      data: queryToFullMsg(ctx.query)
+      code: 200
+    }
+  })
+  .get('/ds-data1', ctx => {
+    ctx.body = {
+      data: {
+        count1: 10,
+        count2: 20,
+        dataA: {
+          countA: 'abcdedg',
+          countB: 'Test'
+        }
+      },
+      succ: true,
+      code: 200
     }
   })
 

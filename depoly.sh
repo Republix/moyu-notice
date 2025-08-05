@@ -5,5 +5,5 @@ source $NVM_DIR/nvm.sh;
 
 nvm use
 git pull
-pm2 stop moyu-notice
+pm2 stop moyu-devtemp
 npm run start

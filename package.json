@@ -1,11 +1,11 @@
 {
-  "name": "moyu-notice",
+  "name": "moyu-devtemp",
   "version": "1.0.0",
-  "description": "moyu notice",
+  "description": "moyu devtemp",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "pm2 start ./src/app.ts --interpreter node --node-args=\"--import tsx\" --name moyu-notice",
+    "start": "pm2 start ./src/app.ts --interpreter node --node-args=\"--import tsx\" --name moyu-devtemp",
     "send": "node run.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
