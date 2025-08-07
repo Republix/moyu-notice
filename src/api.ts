@@ -31,11 +31,11 @@ router
   .get('/ds-list1', ctx => {
 
       const data = [
-        { type1: '测试1', type2: '测试2', type3: 'testing3', type4: '44444' },
-        { type1: '测试12', type2: '测试22', type3: 'testing32', type4: '444442' },
-        { type1: '测试13', type2: '测试23', type3: 'testing33', type4: '444443' },
-        { type1: '测试14', type2: '测试24', type3: 'testing34', type4: '444444' },
-        { type1: '测试15', type2: '测试25', type3: 'testing34', type4: '444445' },
+        { type1: '测试1', type2: '测试2', type3: 'testing3', type4: '44444', type: 'primary' },
+        { type1: '测试12', type2: '测试22', type3: 'testing32', type4: '444442', type: 'success' },
+        { type1: '测试13', type2: '测试23', type3: 'testing33', type4: '444443', type: 'danger' },
+        { type1: '测试14', type2: '测试24', type3: 'testing34', type4: '444444', type: 'info' },
+        { type1: '测试15', type2: '测试25', type3: 'testing34', type4: '444445', type: 'danger' },
       ]
 
     ctx.body = {
