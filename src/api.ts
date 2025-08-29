@@ -2,6 +2,7 @@ import Router from 'koa-router'
 import { logAccess } from '@/plugins/log'
 import { generateMessage } from '@/services/message'
 import { genFullMessageOptions } from '@/interface/msg'
+import { calculateFuckingDayGap } from '@/services/fucking'
 
 const router = new Router()
 
@@ -52,6 +53,12 @@ router
     ctx.body = {
       succ: true,
       data: queryToFullMsg(ctx.query)
+    }
+  })
+  .get('/goesby/bio', ctx => {
+    ctx.body = {
+      succ: true,
+      data: calculateFuckingDayGap()
     }
   })
 
